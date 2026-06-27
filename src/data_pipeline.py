@@ -20,14 +20,22 @@ def get_sp500_tickers():
     return tickers
 
 def fetch_raw_data(tickers_ignored, start_date, end_date):
-    tickers = get_sp500_tickers()[:50] # 대용량 연산 속도를 위해 상위 50개 종목 샘플링
-    print(f">> [1단계] {len(tickers)}개 종목 주가 및 거래량 다운로드 시작...")
-    
-    df = yf.download(tickers, start=start_date, end=end_date, progress=False)
-    
+    save_path = 'data/raw/raw_data.pkl'
     os.makedirs('data/raw', exist_ok=True)
-    df.to_pickle('data/raw/raw_data.pkl')
-    print(">> [1단계] 원본 데이터가 'data/raw/raw_data.pkl'에 저장되었습니다.")
+    
+    # 이미 데이터 파일이 로컬에 존재한다면 중복 다운로드 방지
+    if os.path.exists(save_path):
+        print(">> [1단계] 로컬에 기존 로우 데이터 파일이 존재하므로 로드합니다.")
+        return pd.read_pickle(save_path)
+
+    tickers = get_sp500_tickers() # 전체 종목 대상
+    download_targets = tickers + ['^GSPC'] # 벤치마크용 지수 포함
+    
+    print(f">> [1단계] S&P 500 전체 종목({len(tickers)}개) 및 지수 데이터 다운로드 시작 (최초 1회 소요)...")
+    df = yf.download(download_targets, start=start_date, end=end_date, progress=True)
+    
+    df.to_pickle(save_path)
+    print(f">> [1단계] 원본 데이터가 '{save_path}'에 저장되었습니다.")
     return df
 
 def engineer_features(raw_df, rebalance_period=21):
@@ -49,7 +57,6 @@ def engineer_features(raw_df, rebalance_period=21):
     
     daily_returns = adj_close.pct_change()
     
-    # 5팩터 피처 계산
     mom_20 = adj_close.pct_change(20)
     turnover = adj_close * volume
     size_factor = np.log(turnover.rolling(20).mean() + 1)
@@ -57,14 +64,14 @@ def engineer_features(raw_df, rebalance_period=21):
     profit_factor = (daily_returns > 0).rolling(20).sum() / 20.0
     vol_factor = daily_returns.rolling(20).std()
     
-    # [동기화 핵심] 리밸런싱 주기(N일) 동안의 누적 미래 수익률을 구하고 시프트합니다.
-    # 예: 오늘 종가로 사서 N일 뒤 종가에 팔 때의 수익률을 오늘 행에 매칭
     future_n_days_returns = adj_close.pct_change(rebalance_period).shift(-rebalance_period)
     
     X_list = []
     y_list = []
     
-    tickers = adj_close.columns
+    # 실제 개별 주식 종목들만 루프 수행 (지수 제외)
+    tickers = [col for col in adj_close.columns if col != '^GSPC']
+    
     for ticker in tickers:
         ticker_df = pd.DataFrame(index=adj_close.index)
         ticker_df['f_momentum'] = mom_20[ticker]
@@ -74,10 +81,7 @@ def engineer_features(raw_df, rebalance_period=21):
         ticker_df['f_volatility'] = vol_factor[ticker]
         ticker_df['ticker'] = ticker
         
-        # 어제까지 확정된 5팩터 데이터를 보고 미래를 예측하도록 설정
         ticker_df = ticker_df.shift(1)
-        
-        # 동기화된 N일 누적 미래 수익률을 정답으로 대입
         ticker_df['target'] = future_n_days_returns[ticker]
         ticker_df = ticker_df.dropna()
         
@@ -93,5 +97,5 @@ def engineer_features(raw_df, rebalance_period=21):
     os.makedirs('data/processed', exist_ok=True)
     X_final.to_pickle('data/processed/features_X.pkl')
     y_final.to_pickle('data/processed/target_y.pkl')
-    print(">> [1단계] 맞춤형 타깃 동기화 완료!")
+    print(f">> [1단계] S&P 500 전체 대상 맞춤형 타깃 동기화 완료! (총 {len(tickers)}개 종목)")
     return X_final, y_final
