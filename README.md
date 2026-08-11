@@ -179,4 +179,3 @@ python main.py
 ### 3) 대시보드 시뮬레이터 실행
 ```bash
 streamlit run web_app.py
-```
