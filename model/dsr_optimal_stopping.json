@@ -1,0 +1,144 @@
+{
+    "total_candidates": 20,
+    "sample_size_37pct": 8,
+    "threshold_dsr": 0.0,
+    "selected_strategy": {
+        "id": 20,
+        "factors": [
+            "Mkt-RF",
+            "SMB",
+            "HML",
+            "RMW",
+            "CMA",
+            "Mom_63D",
+            "Vol_21D",
+            "SMA_Ratio",
+            "RSI_14D"
+        ],
+        "allocation": "mvo",
+        "name": "전략_20 (5팩터 + 올인원 종합 세트, Alloc:mvo)",
+        "dsr": 0.0
+    },
+    "logs": [
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_1 (5팩터 펀더멘털 통합 세트, Alloc:equal)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_2 (5팩터 펀더멘털 통합 세트, Alloc:mvp)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_3 (5팩터 펀더멘털 통합 세트, Alloc:risk_parity)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_4 (5팩터 펀더멘털 통합 세트, Alloc:mvo)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_5 (5팩터 + 모멘텀 세트, Alloc:equal)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_6 (5팩터 + 모멘텀 세트, Alloc:mvp)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_7 (5팩터 + 모멘텀 세트, Alloc:risk_parity)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_8 (5팩터 + 모멘텀 세트, Alloc:mvo)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_9 (5팩터 + 변동성 세트, Alloc:equal)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_10 (5팩터 + 변동성 세트, Alloc:mvp)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_11 (5팩터 + 변동성 세트, Alloc:risk_parity)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_12 (5팩터 + 변동성 세트, Alloc:mvo)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_13 (5팩터 + 기술적/RSI 세트, Alloc:equal)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_14 (5팩터 + 기술적/RSI 세트, Alloc:mvp)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_15 (5팩터 + 기술적/RSI 세트, Alloc:risk_parity)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_16 (5팩터 + 기술적/RSI 세트, Alloc:mvo)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_17 (5팩터 + 올인원 종합 세트, Alloc:equal)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_18 (5팩터 + 올인원 종합 세트, Alloc:mvp)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_19 (5팩터 + 올인원 종합 세트, Alloc:risk_parity)",
+            "dsr": 0.0,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_20 (5팩터 + 올인원 종합 세트, Alloc:mvo)",
+            "dsr": 0.0,
+            "selected": false
+        }
+    ]
+}
