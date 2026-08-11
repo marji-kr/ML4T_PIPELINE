@@ -18,7 +18,7 @@
 
 ## 1. 전략 명세 및 구조 (Strategy Breakdown)
 
-본 시스템은 **`[예측 타겟 기간] × [팩터 조합 그룹] × [자산배분 기법]`**의 조합으로 총 **64가지 전략 후보군 ($4 	imes 5 	imes 4 = 64$)**을 생성하여 탐색합니다.
+본 시스템은 **`[예측 타겟 기간] × [팩터 조합 그룹] × [자산배분 기법]`**의 조합으로 총 **64가지 전략 후보군 ($4 \times 5 \times 4 = 64$)**을 생성하여 탐색합니다.
 
 ### ① 예측 타겟 기간 (Prediction Horizons)
 각 종목의 미래 수익률 $Y$를 몇 영업일 뒤 기준으로 예측할지 설정합니다. 백테스트 시 해당 horizon 주기에 맞춰 리밸런싱(`rebalance_freq`)이 함께 진행됩니다.
@@ -53,7 +53,7 @@
 
 이벤트 기반 백테스터(`backtest_engine.py`)에서는 현실적인 매매 마찰 비용을 반영합니다.
 
-$$	ext{Total Cost Rate} = 	ext{Commission Rate} + 	ext{Slippage Rate}$$
+$$\text{Total Cost Rate} = \text{Commission Rate} + \text{Slippage Rate}$$
 
 * **거래 수수료 (`commission`)**: 기본값 **`0.001` (0.10% 또는 10 bps)**
 * **슬리피지 계수 (`slippage`)**: 기본값 **`0.0005` (0.05% 또는 5 bps)**
@@ -62,11 +62,11 @@ $$	ext{Total Cost Rate} = 	ext{Commission Rate} + 	ext{Slippage Rate}$$
 ### 실행 반영 로직
 단순히 전체 포트폴리오 자산에서 일괄 차감하는 방식이 아니라, **리밸런싱 시 발생하는 실제 거래 대금 규모(`trade_value`)의 절대값**에 비례하여 차감됩니다.
 
-$$	ext{trade\_value}_i = (	ext{target\_shares}_i - 	ext{current\_shares}_i) 	imes P_{i, 	ext{open}}$$
+$$\text{trade\_value}_i = (\text{target\_shares}_i - \text{current\_shares}_i) \times P_{i, \text{open}}$$
 
-$$	ext{trade\_cost}_i = |	ext{trade\_value}_i| 	imes (	ext{commission} + 	ext{slippage})$$
+$$\text{trade\_cost}_i = |\text{trade\_value}_i| \times (\text{commission} + \text{slippage})$$
 
-$$	ext{Cash}_{	ext{new}} = 	ext{Cash}_{	ext{old}} - \sum (	ext{trade\_value}_i + 	ext{trade\_cost}_i)$$
+$$\text{Cash}_{\text{new}} = \text{Cash}_{\text{old}} - \sum (\text{trade\_value}_i + \text{trade\_cost}_i)$$
 
 * 체결가는 예측 당일 종가가 아닌 **익일 시가(`tomorrow_open_prices`)**를 사용하여 편향을 제거합니다.
 
@@ -77,37 +77,36 @@ $$	ext{Cash}_{	ext{new}} = 	ext{Cash}_{	ext{old}} - \sum (	ext{trade\_value}_i +
 `web_app.py`에서 계산하는 18가지 평가 지표들의 정의 및 수학적 수식입니다. (일별 수익률 $R_t$, 벤치마크 수익률 $R_{b,t}$, 초기 자산 $V_0$, 최종 자산 $V_T$, 연간 거래일 $N=252$)
 
 ### 1) CAGR (Compound Annual Growth Rate, 연평균 복리 수익률)
-$$	ext{CAGR} = \left(rac{V_T}{V_0}
-ight)^{rac{1}{	ext{Years}}} - 1, \quad 	ext{Years} = rac{	ext{Total Days}}{252}$$
+$$\text{CAGR} = \left(\frac{V_T}{V_0}\right)^{\frac{1}{\text{Years}}} - 1, \quad \text{Years} = \frac{\text{Total Days}}{252}$$
 
 ### 2) Standard Deviation (연율화 표준편차 / 변동성)
-$$\sigma_{	ext{annual}} = \sigma_{	ext{daily}} 	imes \sqrt{252} = \sqrt{rac{1}{T-1} \sum_{t=1}^{T} (R_t -  ar{R})^2} 	imes \sqrt{252}$$
+$$\sigma_{\text{annual}} = \sigma_{\text{daily}} \times \sqrt{252} = \sqrt{\frac{1}{T-1} \sum_{t=1}^{T} (R_t - \bar{R})^2} \times \sqrt{252}$$
 
 ### 3) Sharpe Ratio (샤프 지수)
-$$	ext{Sharpe Ratio} = rac{ ar{R}_{	ext{daily}}}{\sigma_{	ext{daily}}} 	imes \sqrt{252}$$
+$$\text{Sharpe Ratio} = \frac{\bar{R}_{\text{daily}}}{\sigma_{\text{daily}}} \times \sqrt{252}$$
 
 ### 4) Sortino Ratio (소티노 지수)
 하방 리스크(음의 수익률)만을 위험으로 정의한 지수입니다.
-$$	ext{Sortino Ratio} = rac{	ext{CAGR}}{\sigma_{	ext{downside}}}, \quad \sigma_{	ext{downside}} = \sqrt{rac{1}{T_d} \sum_{R_t < 0} R_t^2} 	imes \sqrt{252}$$
+$$\text{Sortino Ratio} = \frac{\text{CAGR}}{\sigma_{\text{downside}}}, \quad \sigma_{\text{downside}} = \sqrt{\frac{1}{T_d} \sum_{R_t < 0} R_t^2} \times \sqrt{252}$$
 
 ### 5) Maximum Drawdown (MDD, 최고점 대비 최대 낙폭)
-$$	ext{Drawdown}_t = rac{V_t - \max_{	au \le t}(V_	au)}{\max_{	au \le t}(V_	au)}, \quad 	ext{MDD} = \min_{t} (	ext{Drawdown}_t)$$
+$$\text{Drawdown}_t = \frac{V_t - \max_{\tau \le t}(V_\tau)}{\max_{\tau \le t}(V_\tau)}, \quad \text{MDD} = \min_{t} (\text{Drawdown}_t)$$
 
 ### 6) Information Ratio (IR, 정보 비율)
 벤치마크 대비 초과수익률의 안정성을 측정합니다.
-$$	ext{IR} = rac{\overline{(R_t - R_{b,t})} 	imes 252}{	ext{Tracking Error}}, \quad 	ext{Tracking Error} = \sigma_{(R_t - R_{b,t})} 	imes \sqrt{252}$$
+$$\text{IR} = \frac{\overline{(R_t - R_{b,t})} \times 252}{\text{Tracking Error}}, \quad \text{Tracking Error} = \sigma_{(R_t - R_{b,t})} \times \sqrt{252}$$
 
-### 7) Alpha ($ lpha$, 젠센의 알파) & Beta ($ eta$, 베타)
-OLS 회귀분석 모델 $R_t =  lpha_{	ext{daily}} +  eta R_{b,t} + \epsilon_t$ 을 통해 추정합니다.
-$$ eta = rac{	ext{Cov}(R_t, R_{b,t})}{	ext{Var}(R_{b,t})}, \quad 	ext{Alpha (연간화)} =  lpha_{	ext{daily}} 	imes 252$$
+### 7) Alpha ($\alpha$, 젠센의 알파) & Beta ($\beta$, 베타)
+OLS 회귀분석 모델 $R_t = \alpha_{\text{daily}} + \beta R_{b,t} + \epsilon_t$ 을 통해 추정합니다.
+$$\beta = \frac{\text{Cov}(R_t, R_{b,t})}{\text{Var}(R_{b,t})}, \quad \text{Alpha (연간화)} = \alpha_{\text{daily}} \times 252$$
 
 ### 8) Benchmark Correlation ($r$) & $R^2$ (결정계수)
-$$r = rac{	ext{Cov}(R_t, R_{b,t})}{\sigma_R \cdot \sigma_{R_b}}, \quad R^2 = r^2$$
+$$r = \frac{\text{Cov}(R_t, R_{b,t})}{\sigma_R \cdot \sigma_{R_b}}, \quad R^2 = r^2$$
 
 ### 9) Value-at-Risk (VaR 5%, 손실 위험 값)
 * **Historical VaR (5%)**: 수익률 분포의 하위 5% 분위수 ($Q_{0.05}(R_t)$)
-* **Analytical VaR (5%)**: 정규분포 가정 하의 손실 한계값 ($ ar{R} + \sigma_R \cdot Z_{0.05}$)
-* **Conditional VaR (5% / CVaR, Expected Shorttail)**: VaR을 초과하는 극단적 손실 구간의 평균값 ($E[R_t \mid R_t \le 	ext{VaR}_{5\%}]$)
+* **Analytical VaR (5%)**: 정규분포 가정 하의 손실 한계값 ($\bar{R} + \sigma_R \cdot Z_{0.05}$)
+* **Conditional VaR (5% / CVaR, Expected Shorttail)**: VaR을 초과하는 극단적 손실 구간의 평균값 ($E[R_t \mid R_t \le \text{VaR}_{5\%}]$)
 
 ### 10) Upside / Downside Capture Ratio (상승/하강 포착 비율)
 * **Upside Capture**: 벤치마크 상승일($R_{b,t} > 0$) 동안의 전략 평균 수익률 비율
