@@ -109,9 +109,9 @@ def calculate_asset_metrics(returns_series, bench_returns_series, start_cash, fi
     return pd.Series(metrics)
 
 # -----------------------------------------------------------------------------
-# 🎯 DSR 최적 정지 이론 (37% Rule) 탐색 대시보드
+# 🎯 Sharpe Ratio 기반 최적 정지 이론 (37% Rule) 대시보드
 # -----------------------------------------------------------------------------
-st.title("📊 S&P 500 5-Factor 결합 다변화 전략 백테스트 시뮬레이터")
+st.title("📊 S&P 500 다변화 전략 백테스트 시뮬레이터")
 
 dsr_json_path = os.path.join(PROJECT_ROOT, "model", "dsr_optimal_stopping.json")
 sel_strat = {}
@@ -120,31 +120,38 @@ if os.path.exists(dsr_json_path):
     with open(dsr_json_path, 'r', encoding='utf-8') as f:
         dsr_info = json.load(f)
         
-    with st.expander("🔍 DSR 기반 최적 정지 이론(37% Rule) 모델 탐색 및 선택 기록 보기", expanded=True):
+    with st.expander("🔍 샤프지수 기반 37% 최적 정지 이론 모델 선택 결과 및 상세 정보", expanded=True):
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("총 후보 전략 수", f"{dsr_info.get('total_candidates', 0)}개")
         m2.metric("37% 관찰 표본 수", f"{dsr_info.get('sample_size_37pct', 0)}개")
-        m3.metric("표본 Cutoff (DSR)", f"{dsr_info.get('threshold_dsr', 0.0):.4f}")
+        m3.metric("표본 Cutoff (Sharpe)", f"{dsr_info.get('threshold_sharpe', 0.0):.4f}")
         
         sel_strat = dsr_info.get("selected_strategy", {})
-        m4.metric("선발 전략 DSR", f"{sel_strat.get('dsr', 0.0):.4f}")
+        m4.metric("선발 전략 Sharpe Ratio", f"{sel_strat.get('sharpe_ratio', 0.0):.4f}")
         
-        st.success(f"🏆 **최종 선발 모델**: `{sel_strat.get('name', 'N/A')}` | **자산배분 기법**: `{sel_strat.get('allocation', 'N/A')}`")
+        # 선발 전략에 대한 세부 명세 표시
+        st.markdown("---")
+        st.subheader("📌 최종 선발 전략 상세 명세")
+        c1, c2, c3 = st.columns(3)
+        c1.info(f"**⏱️ 예측 타겟 기간**: `{sel_strat.get('horizon', 'N/A')}일 뒤` 예측")
+        c2.info(f"**⚖️ 자산배분 기법**: `{sel_strat.get('allocation', 'N/A')}`")
+        factors_used = ", ".join(sel_strat.get('factors', []))
+        c3.info(f"**🧬 사용 팩터 세트**: `{factors_used}`")
         
         logs = dsr_info.get("logs", [])
         if logs:
             logs_df = pd.DataFrame(logs)
             fig_dsr = px.bar(
-                logs_df, x="strategy", y="dsr", color="selected",
+                logs_df, x="strategy", y="sharpe_ratio", color="selected",
                 color_discrete_map={True: "#2ca02c", False: "#1f77b4"},
-                labels={"strategy": "전략 후보군", "dsr": "Deflated Sharpe Ratio (DSR)", "selected": "최종 선발 여부"},
-                title="DSR 기반 37% 최적 정지 탐색 알고리즘 기록"
+                labels={"strategy": "전략 후보군", "sharpe_ratio": "Sharpe Ratio (샤프지수)", "selected": "최종 선발 여부"},
+                title="전략 후보군별 샤프지수 및 37% 최적 정지 탐색 기록"
             )
             fig_dsr.add_hline(
-                y=dsr_info.get('threshold_dsr', 0.0), line_dash="dash", line_color="red",
-                annotation_text=f"37% Threshold ({dsr_info.get('threshold_dsr', 0.0):.4f})"
+                y=dsr_info.get('threshold_sharpe', 0.0), line_dash="dash", line_color="red",
+                annotation_text=f"37% Threshold ({dsr_info.get('threshold_sharpe', 0.0):.4f})"
             )
-            fig_dsr.update_layout(xaxis_tickangle=-45, height=350, margin=dict(l=10, r=10, t=35, b=10))
+            fig_dsr.update_layout(xaxis_tickangle=-45, height=360, margin=dict(l=10, r=10, t=35, b=10))
             st.plotly_chart(fig_dsr, width='stretch')
 else:
     st.warning("⚠️ `model/dsr_optimal_stopping.json` 파일이 없습니다. `python main.py`를 먼저 실행해 주세요.")
@@ -152,7 +159,7 @@ else:
 st.markdown("---")
 
 # -----------------------------------------------------------------------------
-# 메인 백테스트 실행 및 비교 결과 (그래프 + 상세 18가지 표)
+# 메인 백테스트 실행 및 결과 시각화
 # -----------------------------------------------------------------------------
 if models is not None and scaler is not None:
     from data_pipeline import DataPipeline
@@ -162,9 +169,6 @@ if models is not None and scaler is not None:
     st.sidebar.header("⚙️ 백테스트 조건 설정")
     start_year = st.sidebar.slider("시작 년도", min_value=2000, max_value=2026, value=2020)
     end_year = st.sidebar.slider("종료 년도", min_value=start_year, max_value=2026, value=2026)
-    
-    rebalance_options = {"1일": 1, "1주일": 5, "1달": 21, "1분기": 63, "반년": 126, "1년": 252}
-    rebalance_label = st.sidebar.selectbox("리벨런싱 주기", list(rebalance_options.keys()), index=2)
     
     start_cash = st.sidebar.number_input("초기 자본 ($)", min_value=1000, max_value=10000000, value=10000, step=1000)
     commission = st.sidebar.slider("수수료율 (Commission)", 0.0, 0.01, 0.001, step=0.0005, format="%.4f")
@@ -189,7 +193,6 @@ if models is not None and scaler is not None:
     df_combined, tickers = get_backtest_base_data(start_year, end_year)
     test_data = df_combined.loc[f"{start_year}-01-01":f"{end_year}-06-30"]
     
-    # 저장된 최적 전략 팩터 목록 불러오기
     if selected_factors is not None:
         fama_features = selected_factors
     elif hasattr(scaler, 'feature_names_in_'):
@@ -201,7 +204,6 @@ if models is not None and scaler is not None:
     
     active_tickers = list(models.keys())
     
-    # 선택된 팩터들로만 스케일링 수행
     X_test_scaled = pd.DataFrame(
         scaler.transform(test_data[fama_features]), 
         columns=fama_features, 
@@ -212,10 +214,12 @@ if models is not None and scaler is not None:
     test_pred_matrix = predictor.predict_universe(X_test_scaled, models, active_tickers)
     
     selected_alloc = sel_strat.get('allocation', 'equal')
+    selected_horizon = sel_strat.get('horizon', 21)
+    
     backtester = EventDrivenBacktester(start_cash=start_cash, commission=commission)
     portfolio_values = backtester.run_absolute_top10_strategy(
         test_data, test_pred_matrix, active_tickers, 
-        rebalance_freq=rebalance_options[rebalance_label],
+        rebalance_freq=selected_horizon,
         alloc_method=selected_alloc,
         slippage=impact
     )
@@ -230,7 +234,7 @@ if models is not None and scaler is not None:
 
     col1, col2 = st.columns([1.7, 1.3])
     
-    # 📈 1. 자산 성장 누적 비교 그래프
+    # 📈 1. 누적 자산 성장 비교 그래프
     with col1:
         st.write("### 📈 누적 자산 성장 추이 (Asset Growth)")
         fig = go.Figure()
@@ -245,7 +249,7 @@ if models is not None and scaler is not None:
         )
         st.plotly_chart(fig, width='stretch')
         
-    # 📋 2. 18가지 전체 포트폴리오 평가지표 1:1:1 비교 표
+    # 📋 2. 18가지 포트폴리오 평가지표 비교 표
     with col2:
         st.write("### 📋 18가지 상세 포트폴리오 평가 비교 표")
         strat_metrics = calculate_asset_metrics(strat_returns, spy_returns_m, start_cash, portfolio_values.iloc[-1])

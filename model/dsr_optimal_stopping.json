@@ -1,143 +1,504 @@
 {
-    "total_candidates": 20,
-    "sample_size_37pct": 8,
-    "threshold_dsr": 0.0,
+    "total_candidates": 80,
+    "sample_size_37pct": 30,
+    "threshold_sharpe": 1.2000241943025194,
     "selected_strategy": {
-        "id": 20,
+        "id": 31,
+        "horizon": 5,
+        "group_name": "5팩터 + 변동성",
         "factors": [
             "Mkt-RF",
             "SMB",
             "HML",
             "RMW",
             "CMA",
-            "Mom_63D",
             "Vol_21D",
-            "SMA_Ratio",
-            "RSI_14D"
+            "Vol_63D"
         ],
-        "allocation": "mvo",
-        "name": "전략_20 (5팩터 + 올인원 종합 세트, Alloc:mvo)",
-        "dsr": 0.0
+        "allocation": "risk_parity",
+        "name": "전략_31 [5일뒤 예측 | 5팩터 + 변동성 | 자산배분: risk_parity]",
+        "description": "예측주기: 5일 | 사용팩터: [Mkt-RF, SMB, HML, RMW, CMA, Vol_21D, Vol_63D] | 자산배분: risk_parity",
+        "sharpe_ratio": 1.2071597066142796
     },
     "logs": [
         {
             "stage": "Observation (37%)",
-            "strategy": "전략_1 (5팩터 펀더멘털 통합 세트, Alloc:equal)",
-            "dsr": 0.0,
+            "strategy": "전략_1 [1일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: equal]",
+            "sharpe_ratio": -0.0650350689347667,
             "selected": false
         },
         {
             "stage": "Observation (37%)",
-            "strategy": "전략_2 (5팩터 펀더멘털 통합 세트, Alloc:mvp)",
-            "dsr": 0.0,
+            "strategy": "전략_2 [1일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: mvp]",
+            "sharpe_ratio": -0.3308139624859474,
             "selected": false
         },
         {
             "stage": "Observation (37%)",
-            "strategy": "전략_3 (5팩터 펀더멘털 통합 세트, Alloc:risk_parity)",
-            "dsr": 0.0,
+            "strategy": "전략_3 [1일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: risk_parity]",
+            "sharpe_ratio": -0.0684532105217589,
             "selected": false
         },
         {
             "stage": "Observation (37%)",
-            "strategy": "전략_4 (5팩터 펀더멘털 통합 세트, Alloc:mvo)",
-            "dsr": 0.0,
+            "strategy": "전략_4 [1일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: mvo]",
+            "sharpe_ratio": 0.1706571059008919,
             "selected": false
         },
         {
             "stage": "Observation (37%)",
-            "strategy": "전략_5 (5팩터 + 모멘텀 세트, Alloc:equal)",
-            "dsr": 0.0,
+            "strategy": "전략_5 [1일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: equal]",
+            "sharpe_ratio": -0.1521567747889487,
             "selected": false
         },
         {
             "stage": "Observation (37%)",
-            "strategy": "전략_6 (5팩터 + 모멘텀 세트, Alloc:mvp)",
-            "dsr": 0.0,
+            "strategy": "전략_6 [1일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: mvp]",
+            "sharpe_ratio": -0.525425925174855,
             "selected": false
         },
         {
             "stage": "Observation (37%)",
-            "strategy": "전략_7 (5팩터 + 모멘텀 세트, Alloc:risk_parity)",
-            "dsr": 0.0,
+            "strategy": "전략_7 [1일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: risk_parity]",
+            "sharpe_ratio": -0.1560376493909982,
             "selected": false
         },
         {
             "stage": "Observation (37%)",
-            "strategy": "전략_8 (5팩터 + 모멘텀 세트, Alloc:mvo)",
-            "dsr": 0.0,
+            "strategy": "전략_8 [1일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: mvo]",
+            "sharpe_ratio": 0.06810922917023929,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_9 [1일뒤 예측 | 5팩터 + 변동성 | 자산배분: equal]",
+            "sharpe_ratio": -0.10399304789941562,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_10 [1일뒤 예측 | 5팩터 + 변동성 | 자산배분: mvp]",
+            "sharpe_ratio": -0.417680266484556,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_11 [1일뒤 예측 | 5팩터 + 변동성 | 자산배분: risk_parity]",
+            "sharpe_ratio": -0.10694995737740859,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_12 [1일뒤 예측 | 5팩터 + 변동성 | 자산배분: mvo]",
+            "sharpe_ratio": 0.09197888967920109,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_13 [1일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: equal]",
+            "sharpe_ratio": -0.19089605339696958,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_14 [1일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: mvp]",
+            "sharpe_ratio": -0.5294960783582007,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_15 [1일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: risk_parity]",
+            "sharpe_ratio": -0.1913020927725578,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_16 [1일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: mvo]",
+            "sharpe_ratio": -0.017038051472668698,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_17 [1일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: equal]",
+            "sharpe_ratio": -0.1794219720469763,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_18 [1일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: mvp]",
+            "sharpe_ratio": -0.5768434454388052,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_19 [1일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: risk_parity]",
+            "sharpe_ratio": -0.18264686456141696,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_20 [1일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: mvo]",
+            "sharpe_ratio": 0.08293024347961736,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_21 [5일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: equal]",
+            "sharpe_ratio": 1.0694162744092195,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_22 [5일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: mvp]",
+            "sharpe_ratio": 1.0635303317957234,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_23 [5일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.0754717627941228,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_24 [5일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: mvo]",
+            "sharpe_ratio": 0.9092262600096556,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_25 [5일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: equal]",
+            "sharpe_ratio": 1.0803038463991907,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_26 [5일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: mvp]",
+            "sharpe_ratio": 1.063720960077601,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_27 [5일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.0858803105138368,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_28 [5일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: mvo]",
+            "sharpe_ratio": 0.9097125211147855,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_29 [5일뒤 예측 | 5팩터 + 변동성 | 자산배분: equal]",
+            "sharpe_ratio": 1.2000241943025194,
+            "selected": false
+        },
+        {
+            "stage": "Observation (37%)",
+            "strategy": "전략_30 [5일뒤 예측 | 5팩터 + 변동성 | 자산배분: mvp]",
+            "sharpe_ratio": 1.1058183408863254,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_9 (5팩터 + 변동성 세트, Alloc:equal)",
-            "dsr": 0.0,
+            "strategy": "전략_31 [5일뒤 예측 | 5팩터 + 변동성 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.2071597066142796,
+            "selected": true
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_32 [5일뒤 예측 | 5팩터 + 변동성 | 자산배분: mvo]",
+            "sharpe_ratio": 0.8625205591986248,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_10 (5팩터 + 변동성 세트, Alloc:mvp)",
-            "dsr": 0.0,
+            "strategy": "전략_33 [5일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: equal]",
+            "sharpe_ratio": 1.0888138579368105,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_11 (5팩터 + 변동성 세트, Alloc:risk_parity)",
-            "dsr": 0.0,
+            "strategy": "전략_34 [5일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: mvp]",
+            "sharpe_ratio": 1.0612488667285935,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_12 (5팩터 + 변동성 세트, Alloc:mvo)",
-            "dsr": 0.0,
+            "strategy": "전략_35 [5일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.0951250935930983,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_13 (5팩터 + 기술적/RSI 세트, Alloc:equal)",
-            "dsr": 0.0,
+            "strategy": "전략_36 [5일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: mvo]",
+            "sharpe_ratio": 0.9030189033359146,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_14 (5팩터 + 기술적/RSI 세트, Alloc:mvp)",
-            "dsr": 0.0,
+            "strategy": "전략_37 [5일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: equal]",
+            "sharpe_ratio": 1.1389949988639716,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_15 (5팩터 + 기술적/RSI 세트, Alloc:risk_parity)",
-            "dsr": 0.0,
+            "strategy": "전략_38 [5일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: mvp]",
+            "sharpe_ratio": 1.1167318276459357,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_16 (5팩터 + 기술적/RSI 세트, Alloc:mvo)",
-            "dsr": 0.0,
+            "strategy": "전략_39 [5일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.1458498230849057,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_17 (5팩터 + 올인원 종합 세트, Alloc:equal)",
-            "dsr": 0.0,
+            "strategy": "전략_40 [5일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: mvo]",
+            "sharpe_ratio": 0.9682388426227795,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_18 (5팩터 + 올인원 종합 세트, Alloc:mvp)",
-            "dsr": 0.0,
+            "strategy": "전략_41 [21일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: equal]",
+            "sharpe_ratio": 1.0590058273337446,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_19 (5팩터 + 올인원 종합 세트, Alloc:risk_parity)",
-            "dsr": 0.0,
+            "strategy": "전략_42 [21일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: mvp]",
+            "sharpe_ratio": 1.0976355089900356,
             "selected": false
         },
         {
             "stage": "Selection",
-            "strategy": "전략_20 (5팩터 + 올인원 종합 세트, Alloc:mvo)",
-            "dsr": 0.0,
+            "strategy": "전략_43 [21일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.06690745809704,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_44 [21일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: mvo]",
+            "sharpe_ratio": 0.8891117860030147,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_45 [21일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: equal]",
+            "sharpe_ratio": 1.0708661925124165,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_46 [21일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: mvp]",
+            "sharpe_ratio": 1.0753279623428225,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_47 [21일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.078818893081835,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_48 [21일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: mvo]",
+            "sharpe_ratio": 0.8744469194823019,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_49 [21일뒤 예측 | 5팩터 + 변동성 | 자산배분: equal]",
+            "sharpe_ratio": 1.1431771608141623,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_50 [21일뒤 예측 | 5팩터 + 변동성 | 자산배분: mvp]",
+            "sharpe_ratio": 1.1477214461001302,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_51 [21일뒤 예측 | 5팩터 + 변동성 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.152256243889479,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_52 [21일뒤 예측 | 5팩터 + 변동성 | 자산배분: mvo]",
+            "sharpe_ratio": 0.8884601320720174,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_53 [21일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: equal]",
+            "sharpe_ratio": 1.0592835493726631,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_54 [21일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: mvp]",
+            "sharpe_ratio": 1.0982814327027492,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_55 [21일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.0671931003806303,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_56 [21일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: mvo]",
+            "sharpe_ratio": 0.8891117870407176,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_57 [21일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: equal]",
+            "sharpe_ratio": 1.1220104811269134,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_58 [21일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: mvp]",
+            "sharpe_ratio": 1.125472574182721,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_59 [21일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.1307879195928106,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_60 [21일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: mvo]",
+            "sharpe_ratio": 0.9024505878170862,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_61 [63일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: equal]",
+            "sharpe_ratio": 1.0690379638734038,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_62 [63일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: mvp]",
+            "sharpe_ratio": 1.1204563327021728,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_63 [63일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.0690379638734038,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_64 [63일뒤 예측 | 5팩터 펀더멘털 세트 | 자산배분: mvo]",
+            "sharpe_ratio": 0.5889891666934237,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_65 [63일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: equal]",
+            "sharpe_ratio": 1.043151873168078,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_66 [63일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: mvp]",
+            "sharpe_ratio": 1.0871462301344819,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_67 [63일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.043151873168078,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_68 [63일뒤 예측 | 5팩터 + 모멘텀 | 자산배분: mvo]",
+            "sharpe_ratio": 0.5677922078789854,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_69 [63일뒤 예측 | 5팩터 + 변동성 | 자산배분: equal]",
+            "sharpe_ratio": 1.1621617171070395,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_70 [63일뒤 예측 | 5팩터 + 변동성 | 자산배분: mvp]",
+            "sharpe_ratio": 1.1695613146437533,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_71 [63일뒤 예측 | 5팩터 + 변동성 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.1621617171070395,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_72 [63일뒤 예측 | 5팩터 + 변동성 | 자산배분: mvo]",
+            "sharpe_ratio": 0.6454833614509996,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_73 [63일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: equal]",
+            "sharpe_ratio": 1.0690379638734038,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_74 [63일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: mvp]",
+            "sharpe_ratio": 1.1204563326810992,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_75 [63일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.0690379638734038,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_76 [63일뒤 예측 | 5팩터 + 기술적(RSI/SMA) | 자산배분: mvo]",
+            "sharpe_ratio": 0.5889891678437073,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_77 [63일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: equal]",
+            "sharpe_ratio": 1.1185809806808997,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_78 [63일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: mvp]",
+            "sharpe_ratio": 1.1680967008697563,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_79 [63일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: risk_parity]",
+            "sharpe_ratio": 1.1185809806808997,
+            "selected": false
+        },
+        {
+            "stage": "Selection",
+            "strategy": "전략_80 [63일뒤 예측 | 5팩터 + 종합 올인원 | 자산배분: mvo]",
+            "sharpe_ratio": 0.5886130954780838,
             "selected": false
         }
     ]

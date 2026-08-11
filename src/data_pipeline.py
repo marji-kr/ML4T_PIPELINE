@@ -45,17 +45,20 @@ class DataPipeline:
             price_df.to_csv(local_matrix_path)
             
         returns_dict = {}
-        forward_returns_dict = {}
+        target_dict = {}
+        
+        horizons = [1, 5, 21, 63]
         
         for t in price_df.columns:
             price_series = pd.to_numeric(price_df[t].astype(str).str.replace(',', ''), errors='coerce').ffill().bfill()
             returns_dict[f"{t}_Return"] = price_series.pct_change(1, fill_method=None)
-            forward_returns_dict[f"{t}_Target"] = price_series.pct_change(1, fill_method=None).shift(-1)
+            
+            for h in horizons:
+                target_dict[f"{t}_Target_{h}D"] = price_series.pct_change(h, fill_method=None).shift(-h)
             
         returns_df = pd.DataFrame(returns_dict, index=price_df.index)
-        forward_df = pd.DataFrame(forward_returns_dict, index=price_df.index)
+        target_df = pd.DataFrame(target_dict, index=price_df.index)
         
-        # 1. Fama-French 5팩터 데이터 로드
         local_ff_path = os.path.join(self.data_dir, "fama_french_5_factors_raw.csv")
         if os.path.exists(local_ff_path):
             ff_df = pd.read_csv(local_ff_path, index_col=0, parse_dates=True)
@@ -64,7 +67,6 @@ class DataPipeline:
             ff_df = ff_factors[0] / 100.0 
             ff_df.to_csv(local_ff_path)
             
-        # 2. 책 추천 파생 팩터 생성
         mkt_ret = ff_df['Mkt-RF']
         derived_factors = pd.DataFrame(index=ff_df.index)
         derived_factors['Mom_21D'] = mkt_ret.rolling(21).sum()
@@ -82,7 +84,7 @@ class DataPipeline:
         derived_factors['RSI_14D'] = 100 - (100 / (1 + rs))
 
         master_df = price_df.join(returns_df, how='inner')\
-                             .join(forward_df, how='inner')\
+                             .join(target_df, how='inner')\
                              .join(ff_df, how='inner')\
                              .join(derived_factors, how='inner')\
                              .dropna()

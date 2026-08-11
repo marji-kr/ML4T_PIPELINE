@@ -21,16 +21,12 @@ class MLPredictor:
             if t in trained_models:
                 model_obj = trained_models[t]
                 params = model_obj.params
-                
-                # 모델 파라미터 개수 (상수항 포함)
                 n_params = len(params)
                 
-                # 입력 피처 슬라이싱 (상수항 제외 팩터 개수 = n_params - 1)
                 feat_cols = self.features[:n_params - 1]
                 X_test_sub = test_df[feat_cols]
                 X_test_const = sm.add_constant(X_test_sub, has_constant='add')
                 
-                # 차원 정렬 후 예측 연산
                 pred_matrix[t] = np.dot(X_test_const.values, params)
                 
         return pd.DataFrame(pred_matrix, index=test_df.index)
