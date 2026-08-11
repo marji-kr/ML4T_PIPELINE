@@ -63,15 +63,13 @@ $$\text{Total Cost Rate} = \text{Commission Rate} + \text{Slippage Rate}$$
 단순히 전체 포트폴리오 자산에서 일괄 차감하는 방식이 아니라, **리밸런싱 시 발생하는 실제 거래 대금 규모(`trade_value`)의 절대값**에 비례하여 차감됩니다.
 
 $$
-\text{trade\_value}_i = (\text{target\_shares}_i - \text{current\_shares}_i) \times P_{i, \text{open}}
+\text{TradeValue}_i = (\text{TargetShares}_i - \text{CurrentShares}_i) \times P_{i, \text{open}}
 $$
-
 $$
-\text{trade\_cost}_i = |\text{trade\_value}_i| \times (\text{commission} + \text{slippage})
+\text{TradeCost}_i = |\text{TradeValue}_i| \times (\text{Commission} + \text{Slippage})
 $$
-
 $$
-\text{Cash}_{\text{new}} = \text{Cash}_{\text{old}} - \sum (\text{trade\_value}_i + \text{trade\_cost}_i)
+\text{Cash}_{\text{new}} = \text{Cash}_{\text{old}} - \sum (\text{TradeValue}_i + \text{TradeCost}_i)
 $$
 
 * 체결가는 예측 당일 종가가 아닌 **익일 시가(`tomorrow_open_prices`)**를 사용하여 편향을 제거합니다.
@@ -112,7 +110,7 @@ $$r = \frac{\text{Cov}(R_t, R_{b,t})}{\sigma_R \cdot \sigma_{R_b}}, \quad R^2 = 
 ### 9) Value-at-Risk (VaR 5%, 손실 위험 값)
 * **Historical VaR (5%)**: 수익률 분포의 하위 5% 분위수 ($Q_{0.05}(R_t)$)
 * **Analytical VaR (5%)**: 정규분포 가정 하의 손실 한계값 ($\bar{R} + \sigma_R \cdot Z_{0.05}$)
-* **Conditional VaR (5% / CVaR, Expected Shorttail)**: VaR을 초과하는 극단적 손실 구간의 평균값 ($E[R_t \mid R_t \le \text{VaR}_{5\%}]$)
+* **Conditional VaR (5% / CVaR, Expected Shortfall)**: VaR을 초과하는 극단적 손실 구간의 평균값 ($E[R_t \mid R_t \le \text{VaR}_{0.05}]$)
 
 ### 10) Upside / Downside Capture Ratio (상승/하강 포착 비율)
 * **Upside Capture**: 벤치마크 상승일($R_{b,t} > 0$) 동안의 전략 평균 수익률 비율
