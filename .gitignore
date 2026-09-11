@@ -1,0 +1,11 @@
+# Raw/generated data (reproducible via data/create_datasets.ipynb) — too large for GitHub
+data/data/
+data/assets.h5
+
+# Python
+__pycache__/
+*.pyc
+
+# Zipline temp bundles produced by notebooks
+.zipline_root/
+_zipline_csv_bundle/
