@@ -1,0 +1,96 @@
+# 🤖 모델링·백테스트 노트북 안내 (model.readme)
+
+이 문서는 `model/` 폴더 아래 각 단원(챕터) 노트북이 무엇을 하는 코드인지, 그리고 그 결과물이 어떤 파일 이름으로 어떻게 저장되는지 정리합니다.
+
+**작성 규칙**: 새 단원을 학습/추가할 때마다 아래에 새 섹션을 이어서 추가합니다. 각 단원 섹션은 구분선(`---`)으로 구분됩니다.
+
+---
+
+## 7단원 — Ridge 회귀 다중 호라이즌 예측 & 백테스트 (`7단원/7단원.ipynb`)
+
+### 데이터
+- `../../data/data/assets.h5`의 `quandl/wiki/prices`(2013-01-01~2017-12-31 구간만) + `us_equities/stocks`의 `marketcap`, `ipoyear`, `sector` 3개 컬럼을 로드합니다.
+- 유니버스 필터링: 최소 504거래일(약 2년) 이상 존재하는 종목만 유지 → 21일 롤링 평균 거래대금(`dollar_vol_ma21`) 기준 날짜별 상위 100종목만 채택.
+
+### 피처 엔지니어링
+- 모멘텀(지연 수익률) 6종: 1/5/10/21/42/63일, 0.01~99.99분위 윈저라이즈 후 일간 기하평균으로 환산.
+- 시차 이동 모멘텀 20종: 위 1/5/10/21일 모멘텀을 t=1~5기 전 시점 값으로 shift.
+- 기술적 지표 5종: RSI(14일), 볼린저밴드 상/하단, ATR, MACD.
+- 연도/월/섹터 더미 변수, 예측 타깃(`target_1d/5d/10d/21d`, 미래 수익률 1/5/10/21일).
+
+### 모델 학습 — 롤링 윈도우 Walk-Forward (Cell 6)
+- `Ridge(alpha=10.0)`을 호라이즌(1/5/10/21일)별로 각각 학습. 학습 63거래일 / 검증 10거래일 윈도우를 뒤에서 앞으로 반복(`n_splits = 3×252/10`회).
+- 호라이즌별 산출물:
+  - `rolling_metrics_result_{h}d.csv` — 일별 IC(정보계수)·RMSE
+  - `predictions_result_{h}d.csv` — 워크포워드 OOS 예측치·실제값
+  - `model_coefficients_{h}d.csv` — 윈도우별 회귀계수 + 절편
+- 1일 호라이즌은 하위 호환을 위해 접미사 없는 이름으로도 동일 내용을 별도 저장: `rolling_metrics_result.csv`, `predictions_result.csv`, `model_coefficients.csv`.
+- 전체 호라이즌의 최종(가장 최근 윈도우) 모델을 한 번에: `final_ridge_models_all_horizons.joblib` (dict: {model, scaler, features, alpha}); 1일 호라이즌만 별도로 `final_ridge_model.joblib`.
+
+### 결과 시각화
+- `rolling_performance_plot.png` — 호라이즌별 Daily IC·누적 IC·Daily RMSE (3행×4열 서브플롯).
+
+### 백테스트 — Backtrader (Cell 8)
+- 예측 상위/하위 10종목 롱숏, 동일가중, 호라이즌 `h`일마다 리밸런싱, 체결 1회당 고정 $0.02 수수료, XNYS(뉴욕증권거래소) 실제 거래일 캘린더 사용.
+- `backtrader_multi_horizon_plot.png` — 호라이즌별 누적수익률 vs S&P500·Nasdaq100 (2×2).
+- `backtrader_daily_returns_all_horizons.csv` — 호라이즌별 일별 수익률.
+
+### 백테스트 — Zipline (Cell 9)
+- Backtrader와 동일한 신호·매매규칙·수수료를 사용하되, 체결 타이밍을 맞추기 위해 예측 신호를 1거래일 뒤로 `shift`.
+- 4개 호라이즌 전체 종목/기간을 합친 공용 CSV 번들(`ml4t_ridge_bundle`)을 노트북 폴더 내 `.zipline_root/`, `_zipline_csv_bundle/`에 격리 생성 후 적재.
+- `zipline_perf_result_{h}d.csv` — 호라이즌별 포트폴리오 가치·수익률.
+- `zipline_multi_horizon_plot.png` — 호라이즌별 누적수익률 vs S&P500·Nasdaq100 (2×2).
+
+### 성과 종합 & 모델 해석
+- `backtest_comparison_summary.csv` — Backtrader vs Zipline × 4개 호라이즌 총수익률/Sharpe/MDD 비교표 (Cell 10).
+- `model_decision_boundary_plot.png` — 각 호라이즌 최종 모델에서 계수 절댓값 상위 2개 연속형 변수만으로 그린 선형 결정 경계(예측값=0 기준선), 2×2 (Cell 11).
+- Cell 11 후반부의 `statsmodels` OLS 회귀 요약(계수·t값·p값·R² 등)은 파일로 저장되지 않고 노트북 출력(셀 실행 결과)으로만 표시됩니다.
+
+---
+
+## 11단원 — Random Forest 다중 호라이즌 예측 & 백테스트, 일본 주식 (`11단원/11단원.ipynb`)
+
+### 데이터 구축 (Cell 2)
+- `../../data/data/d_jp_txt.zip`(도쿄증권거래소 개별 종목 일별 시세, 2010~2019) 압축을 직접 해제해 파싱하고, 다음 순서로 정제한 뒤 `../../data/data/japan.h5`에 저장합니다.
+  1. 5일 이상 연속 결측이 있는 종목 제외
+  2. 2010~2019년 전체 평균 거래대금 상위 1,000종목으로 축소
+  3. 그중 2010~2017년(In-Sample) 평균 거래대금 상위 250종목만 최종 채택
+- 저장 키: `equities/japan/prices_250`(전체), `equities/japan/in_sample`(~2017-12-31), `equities/japan/out_sample`(2018-01-01~).
+
+### 피처 엔지니어링 (Cell 3)
+- 가격 기반 피처: 시차 수익률(1/5/10/21/63일), PPO(12·26일 EMA), NATR(14일 정규화 변동성), RSI(14일), 볼린저밴드 %B(20일) — 총 9개.
+- 범주형 피처: 당일 수익률(`ret_1`) 20분위 순위(`ret_1_rank`), 요일/월/연도.
+- 예측 타깃: `target_1d/5d/10d/21d` (1/5/10/21일 후 수익률).
+- 결과를 `equities/japan/features_targets` 키로 `japan.h5`에 저장.
+
+### 하이퍼파라미터 탐색 (Cell 5~10)
+- `MultipleTimeSeriesCV`(학습 504일/검증 63일 롤링 윈도우, lookahead gap 적용)로 `target_1d` 기준 `RandomForestRegressor` 그리드서치.
+- 그리드: `bagging_fraction`{0.5, 0.75, 0.95} × `feature_fraction`{0.75, 0.95} × `min_data_in_leaf`{250, 500, 1000} = 18개 조합, 평가지표는 일별 스피어만 IC 평균.
+- 탐색 결과는 파일이 아닌 `japan.h5`의 `model/rf_tuning_results` 키에 저장되고, IC 최상위 조합을 `best_params`로 채택.
+- 참고: 라이브러리 임포트 목록에는 `lightgbm`이 포함되어 있으나, 실제 하이퍼파라미터 탐색·최종 모델 학습에는 `sklearn.ensemble.RandomForestRegressor`가 사용됩니다.
+
+### 다중 호라이즌 최종 모델 학습 & OOS 평가 (Cell 19~20)
+- `best_params`를 그대로 재사용해 호라이즌(1/5/10/21일)별 최종 Random Forest를 각각 학습. 각 호라이즌의 타깃 계산에 OOS(2018년 이후) 가격이 섞여 들어가는 정보 누수를 막기 위해, In-Sample 마지막 `h`거래일을 학습에서 제외(embargo)합니다.
+- `final_rf_model_{h}d.joblib` — 호라이즌별 학습된 모델 (h=1,5,10,21 총 4개 파일).
+- OOS(2018~2019) 예측치는 `japan.h5`의 `model/oos_predictions_{h}d` 키에 저장됩니다(파일로는 저장되지 않음).
+- 모델 요약(트리 수, 노드/리프 수, 평균 깊이, Top10 피처 중요도)은 `print_rf_summary()` 함수로 노트북 출력에만 표시되고 파일로 저장되지 않습니다.
+
+### 모델 해석 시각화
+- `model_tree_plot.png` — 각 호라이즌 최종 모델의 첫 번째 트리(100개 중 1개)를 상위 3단계까지 시각화 (2×2, Cell 22).
+- ⚠️ `model_decision_boundary_plot.png`: 폴더에 파일은 존재하지만 **현재 노트북 코드에는 이를 생성하는 셀이 없습니다.** 파일 생성 시각(2026-09-09)이 노트북·다른 산출물의 최신 실행 시각(2026-09-11)보다 앞서는 것으로 볼 때, 트리 시각화(Cell 22)로 대체되기 전 이전 버전 노트북이 만든 결과물이 폴더에 남아있는 것으로 보입니다. 최신 코드 기준 모델 해석 결과물은 `model_tree_plot.png`입니다.
+
+### 백테스트 — Backtrader (Cell 24~26)
+- 예측 상위/하위 10종목 롱숏, 동일가중, **매일 리밸런싱**, 체결 1회당 고정 $0.02 수수료(슬리피지 없음), XTKS(도쿄증권거래소) 실제 거래일 캘린더, 벤치마크는 니케이225(`^N225`).
+- `backtrader_daily_returns_all_horizons.csv` — 호라이즌별 일별 수익률.
+- `backtrader_all_horizons_plot.png` — 호라이즌별 누적수익률 vs 니케이225 (2×2).
+
+### 백테스트 — Zipline (Cell 28~30)
+- Backtrader와 동일한 신호·매매규칙·수수료·XTKS 캘린더 사용, 체결 타이밍을 맞추기 위해 예측 신호를 1거래일 뒤로 `shift`.
+- 공용 CSV 번들(`ml4t_japan_rf_bundle`)을 노트북 폴더 내 `.zipline_root/`, `_zipline_csv_bundle/`에 격리 생성 후 적재.
+- `zipline_daily_returns_all_horizons.csv` — 호라이즌별 일별 수익률.
+- `zipline_all_horizons_plot.png` — 호라이즌별 누적수익률 vs 니케이225 (2×2).
+
+### 성과 종합
+- `engine_comparison_summary.csv` — Backtrader vs Zipline × 4개 호라이즌 총수익률/Sharpe/MDD 비교표 (Cell 31).
+
+---

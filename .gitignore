@@ -1,6 +1,11 @@
 # Raw/generated data (reproducible via data/create_datasets.ipynb) — too large for GitHub
-data/data/
 data/assets.h5
+data/data/assets.h5
+data/data/japan.h5
+data/data/WIKI_PRICES_*.csv
+data/data/d_jp_txt.zip
+data/data/mnist/
+data/data/fashion_mnist/
 
 # Python
 __pycache__/
